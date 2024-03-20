@@ -26,12 +26,11 @@ class UserController
         $this->validator->mapFieldsRules([
             'nama' => ['required'],
             'alamat' => ['required'],
-            'gender' => ['required'],
             'umur' => ['required', 'integer', ['min', 1]],
+            'tgl_lahir' => ['required'],
+            'gender' => ['required'],
             'username' => ['required'],
-            'password' => ['required'],
-            'jabatan' => ['required'],
-            'level' => ['required']
+            'userpass' => ['required'],
         ]);
     }
 
@@ -69,7 +68,8 @@ class UserController
         $created = $this->userRepository->create($data);
         $body = json_encode([
             'message' => 'user added',
-            'id' => $created
+            'id' => $created,
+            'data' => $this->userRepository->getById($created),
         ]);
         $response->getBody()->write($body);
 

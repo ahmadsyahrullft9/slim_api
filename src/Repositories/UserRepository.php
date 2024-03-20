@@ -19,14 +19,14 @@ class UserRepository
     {
         $pdo = $this->database->getConnection();
 
-        $stmt = $pdo->query('SELECT * FROM karyawan');
+        $stmt = $pdo->query("SELECT * FROM mstuser");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getById($id)
     {
         $pdo = $this->database->getConnection();
-        $sql = 'SELECT * FROM karyawan WHERE id=:id';
+        $sql = "SELECT * FROM mstuser WHERE id=:id";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -36,17 +36,16 @@ class UserRepository
     public function create($data): string
     {
         $pdo = $this->database->getConnection();
-        $sql = 'INSERT INTO karyawan(nama, alamat, gender, umur, username, `password`, jabatan, `level`)
-                VALUES (:nama, :alamat, :gender, :umur, :username, :password, :jabatan, :level)';
+        $sql = "INSERT INTO mstuser(nama, alamat, umur, tgl_lahir, gender, username, userpass)
+                VALUES(:nama, :alamat, :umur, :tgl_lahir, :gender, :username, :userpass)";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(':nama', $data['nama'], PDO::PARAM_STR);
         $stmt->bindValue(':alamat', $data['alamat'], PDO::PARAM_STR);
-        $stmt->bindValue(':gender', $data['gender'], PDO::PARAM_STR);
         $stmt->bindValue(':umur', $data['umur'], PDO::PARAM_INT);
+        $stmt->bindValue(':tgl_lahir', $data['tgl_lahir'], PDO::PARAM_STR);
+        $stmt->bindValue(':gender', $data['gender'], PDO::PARAM_STR);
         $stmt->bindValue(':username', $data['username'], PDO::PARAM_STR);
-        $stmt->bindValue(':password', base64_encode($data['password']), PDO::PARAM_STR);
-        $stmt->bindValue(':jabatan', $data['jabatan'], PDO::PARAM_STR);
-        $stmt->bindValue(':level', $data['level'], PDO::PARAM_STR);
+        $stmt->bindValue(':userpass', md5($data['userpass']), PDO::PARAM_STR);
 
         $stmt->execute();
 
@@ -56,18 +55,17 @@ class UserRepository
     public function update(int $id, $data): int
     {
         $pdo = $this->database->getConnection();
-        $sql = 'UPDATE karyawan 
-                SET nama=:nama, alamat=:alamat, gender=:gender, umur=:umur, username=:username, password=:password, jabatan=:jabatan, level=:level 
-                WHERE id=:id';
+        $sql = "UPDATE mstuser 
+                SET nama=:nama,	alamat=:alamat,	umur=:umur,	tgl_lahir=:tgl_lahir, gender=:gender, username=:username, userpass=:userpass
+                WHERE id=:id";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(':nama', $data['nama'], PDO::PARAM_STR);
         $stmt->bindValue(':alamat', $data['alamat'], PDO::PARAM_STR);
-        $stmt->bindValue(':gender', $data['gender'], PDO::PARAM_STR);
         $stmt->bindValue(':umur', $data['umur'], PDO::PARAM_INT);
+        $stmt->bindValue(':tgl_lahir', $data['tgl_lahir'], PDO::PARAM_STR);
+        $stmt->bindValue(':gender', $data['gender'], PDO::PARAM_STR);
         $stmt->bindValue(':username', $data['username'], PDO::PARAM_STR);
-        $stmt->bindValue(':password', base64_encode($data['password']), PDO::PARAM_STR);
-        $stmt->bindValue(':jabatan', $data['jabatan'], PDO::PARAM_STR);
-        $stmt->bindValue(':level', $data['level'], PDO::PARAM_STR);
+        $stmt->bindValue(':userpass', md5($data['userpass']), PDO::PARAM_STR);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
 
         $stmt->execute();
@@ -78,8 +76,8 @@ class UserRepository
     public function delete(int $id): int
     {
         $pdo = $this->database->getConnection();
-        $sql = 'DELETE FROM karyawan 
-                WHERE id=:id';
+        $sql = "DELETE FROM mstuser 
+                WHERE id=:id";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
 
