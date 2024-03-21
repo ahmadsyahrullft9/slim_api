@@ -20,6 +20,15 @@ CREATE TABLE IF NOT EXISTS `mstuser` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
 
+CREATE TABLE IF NOT EXISTS `user_key` (
+  `user_id` varchar(255) COLLATE armscii8_bin NOT NULL,
+  `user_email` varchar(120) COLLATE armscii8_bin DEFAULT NULL,
+  `user_password` text COLLATE armscii8_bin DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
