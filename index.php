@@ -1,5 +1,6 @@
 <?php
 
+use App\Auth;
 use DI\ContainerBuilder;
 
 use Slim\Factory\AppFactory;
@@ -10,6 +11,8 @@ use Middleware\AddJsonResponse;
 use Middleware\GetUser;
 
 use Controller\UserController;
+use Controller\UserKeyController;
+use Middleware\JwtAuth;
 
 require __DIR__ . '/vendor/autoload.php';
 
@@ -45,21 +48,23 @@ $app->add(new AddJsonResponse);
 //untuk memparsing body request
 $app->addBodyParsingMiddleware();
 
+//mendaftarkan pengguna baru untuk akses api dengan token
+$app->group('/token', function (RouteCollectorProxy $group) {
+    $group->post('/register', [UserKeyController::class, 'register_user']);
+    $group->get('/register', [UserKeyController::class, 'find_user']);
+});
+
 $app->group('/api', function (RouteCollectorProxy $group) {
-
+    //endpoint users
     $group->get('/users', [UserController::class, 'show']);
-
     $group->post('/users', [UserController::class, 'create']);
-
     $group->group('', function (RouteCollectorProxy $group1) {
         //[0-9]+ : hanya menerima bilangan
         $group1->get('/users/{id:[0-9]+}', [UserController::class, 'find']);
-
         $group1->patch('/users/{id:[0-9]+}', [UserController::class, 'update']);
-
         $group1->delete('/users/{id:[0-9]+}', [UserController::class, 'delete']);
     })->add(GetUser::class);
-});
+})->add(JwtAuth::class);
 
 $app->run();
 
