@@ -1,6 +1,5 @@
 <?php
 
-use App\Auth;
 use DI\ContainerBuilder;
 
 use Slim\Factory\AppFactory;
